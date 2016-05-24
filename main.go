@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var addr = flag.String("addr", "addr to listen", ":11111")
+var addr = flag.String("addr", ":11111", "addr to listen")
 
 func main() {
 	server, err := net.Listen("tcp", *addr)
