@@ -8,10 +8,13 @@ import (
 	"os"
 )
 
-var addr = flag.String("addr", ":11111", "addr to listen")
+var addr = flag.String("a", ":11111", "addr to listen")
+var protocol = flag.String("p", "tcp", "protocol, default tcp")
+var verbose = flag.Bool("v", false, "verbose")
 
 func main() {
-	server, err := net.Listen("tcp", *addr)
+	flag.Parse()
+	server, err := net.Listen(*protocol, *addr)
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -37,5 +40,9 @@ func clientConns(listener net.Listener) chan net.Conn {
 }
 
 func handleConn(client net.Conn) {
-	io.Copy(io.MultiWriter(client, os.Stdout), client)
+	if *verbose {
+		io.Copy(io.MultiWriter(client, os.Stdout), client)
+	} else {
+		io.Copy(client, client)
+	}
 }
